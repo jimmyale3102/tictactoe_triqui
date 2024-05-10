@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
-import dev.alejo.triqui.home.HomeScreen
+import dev.alejo.triqui.ui.home.HomeScreen
 import dev.alejo.triqui.ui.theme.TriquiTheme
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package dev.alejo.triqui.home
+package dev.alejo.triqui.ui.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

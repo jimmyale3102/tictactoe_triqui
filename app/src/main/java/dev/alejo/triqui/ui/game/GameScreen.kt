@@ -1,4 +1,4 @@
-package dev.alejo.triqui.game
+package dev.alejo.triqui.ui.game
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border

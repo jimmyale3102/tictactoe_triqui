@@ -1,4 +1,4 @@
-package dev.alejo.triqui.home
+package dev.alejo.triqui.ui.home
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

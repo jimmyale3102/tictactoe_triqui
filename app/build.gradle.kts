@@ -67,9 +67,11 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.database)
     // Dagger Hilt
     implementation(libs.dagger.hilt)
     implementation(libs.dagger.hilt.navigation)
+    implementation(libs.firebase.database.ktx)
     kapt(libs.dagger.hilt.compiler)
 
     testImplementation(libs.junit)

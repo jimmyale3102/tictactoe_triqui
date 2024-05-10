@@ -15,9 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
-fun GameScreen() {
+fun GameScreen(gameViewModel: GameViewModel = hiltViewModel()) {
     Board()
 }
 
@@ -47,7 +49,11 @@ fun Board() {
 
 @Composable
 fun GameItem() {
-    Box(Modifier.size(64.dp).padding(4.dp).border(BorderStroke(1.dp, Color.Black)), contentAlignment = Alignment.Center) {
+    Box(
+        Modifier
+            .size(64.dp)
+            .padding(4.dp)
+            .border(BorderStroke(1.dp, Color.Black)), contentAlignment = Alignment.Center) {
         Text("X")
     }
 }

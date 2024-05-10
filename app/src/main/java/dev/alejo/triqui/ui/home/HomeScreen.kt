@@ -20,7 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    navigateToGame: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -57,5 +60,5 @@ fun JoinGame(onJoinGame: (String) -> Unit) {
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
 private fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen() {}
 }

@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ "dev", "feat/ui" ]
+    branches: [ "dev", "feat/ui", "feat/data" ]
   pull_request:
     branches: [ "dev" ]
 

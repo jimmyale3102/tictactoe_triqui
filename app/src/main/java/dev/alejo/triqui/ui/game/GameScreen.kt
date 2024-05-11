@@ -18,7 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun GameScreen(gameViewModel: GameViewModel = hiltViewModel()) {
+fun GameScreen(
+    gameViewModel: GameViewModel = hiltViewModel(),
+    gameId: String,
+    playerId: String,
+    isOwner: Boolean
+) {
     Board()
 }
 
@@ -52,7 +57,8 @@ fun GameItem() {
         Modifier
             .size(64.dp)
             .padding(4.dp)
-            .border(BorderStroke(1.dp, Color.Black)), contentAlignment = Alignment.Center) {
+            .border(BorderStroke(1.dp, Color.Black)), contentAlignment = Alignment.Center
+    ) {
         Text("X")
     }
 }

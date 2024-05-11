@@ -15,20 +15,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
-    navigateToGame: () -> Unit
+    navigateToGame: (String, String, Boolean) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(2f))
-        CreateGame(onCreateGame = { homeViewModel.onCreateGame() })
+        CreateGame(onCreateGame = { homeViewModel.onCreateGame(navigateToGame) })
         Spacer(modifier = Modifier.weight(1f))
         Divider(
             modifier = Modifier
@@ -36,7 +35,7 @@ fun HomeScreen(
                 .height(2.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
-        JoinGame(onJoinGame = { gameId -> homeViewModel.onJoinGame(gameId) })
+        JoinGame(onJoinGame = { gameId -> homeViewModel.onJoinGame(gameId, navigateToGame) })
         Spacer(modifier = Modifier.weight(2f))
     }
 }
@@ -55,10 +54,4 @@ fun JoinGame(onJoinGame: (String) -> Unit) {
     Button(onClick = { onJoinGame(gameId) }, enabled = gameId.isNotEmpty()) {
         Text(text = "Join Game")
     }
-}
-
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-private fun HomeScreenPreview() {
-    HomeScreen() {}
 }

@@ -10,7 +10,7 @@ import dev.alejo.triqui.ui.core.Routes.*
 
 @Composable
 fun ContentWrapper(navigationController: NavHostController) {
-    NavHost(navController = navigationController, startDestination = Game.route ) {
+    NavHost(navController = navigationController, startDestination = Home.route ) {
         composable(Home.route) {
             HomeScreen(navigateToGame = { navigationController.navigate(Game.route) })
         }

@@ -3,8 +3,9 @@ package dev.alejo.triqui.ui.home
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.alejo.triqui.data.network.FirebaseService
-import dev.alejo.triqui.data.network.model.GameModel
+import dev.alejo.triqui.data.network.model.GameData
 import dev.alejo.triqui.data.network.model.PlayerData
+import dev.alejo.triqui.ui.model.PlayerType
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -28,9 +29,9 @@ class HomeViewModel @Inject constructor(
 
     private fun createPlayerId(): String = Calendar.getInstance().timeInMillis.hashCode().toString()
 
-    private fun createNewGame(): GameModel {
-        val currentPlayer = PlayerData(playerType = 1)
-        return GameModel(
+    private fun createNewGame(): GameData {
+        val currentPlayer = PlayerData(playerType = PlayerType.PlayerOwner.id)
+        return GameData(
             board = List(9) { 0 },
             player1 = currentPlayer,
             playerTurn = currentPlayer,

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,9 +25,13 @@ fun GameScreen(
     playerId: String,
     isOwner: Boolean
 ) {
+    LaunchedEffect(true) {
+        gameViewModel.joinToGame(gameId, playerId, isOwner)
+    }
     Board()
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun Board() {
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -61,10 +66,4 @@ fun GameItem() {
     ) {
         Text("X")
     }
-}
-
-@Composable
-@Preview(showSystemUi = true, showBackground = true)
-private fun GameScreenPreview() {
-    GameScreen()
 }

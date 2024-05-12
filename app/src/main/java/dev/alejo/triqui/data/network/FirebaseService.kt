@@ -27,4 +27,10 @@ class FirebaseService @Inject constructor(private val databaseRef: DatabaseRefer
             dataSnapshot.getValue(GameData::class.java)?.toModel()
         }
     }
+
+    fun updateGame(gameData: GameData) {
+        if (gameData.gameId != null) {
+            databaseRef.child(PATH).child(gameData.gameId).setValue(gameData)
+        }
+    }
 }

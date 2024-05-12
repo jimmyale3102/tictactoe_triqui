@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import dev.alejo.triqui.ui.model.GameModel
 
 @Composable
 fun GameScreen(
@@ -28,15 +30,22 @@ fun GameScreen(
     LaunchedEffect(true) {
         gameViewModel.joinToGame(gameId, playerId, isOwner)
     }
-    Board()
+
+    val game: GameModel? by gameViewModel.game.collectAsState()
+    Board(game)
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun Board() {
+fun Board(game: GameModel?) {
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "This is the game Id")
-        Text(text = "Your turn / Opponent turn / Waiting for opponent")
+        Text(text = game?.gameId.orEmpty())
+        val gameStatus = if (game?.isGameReady == true) {
+            "Your turn / opponent turn"
+        } else {
+            "Waiting for the opponent"
+        }
+        //Text(text = "Your turn / Opponent turn / Waiting for opponent")
+        Text(text = gameStatus)
 
         Row {
             GameItem()

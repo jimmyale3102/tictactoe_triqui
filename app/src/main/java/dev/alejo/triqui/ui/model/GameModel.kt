@@ -9,7 +9,8 @@ data class GameModel(
     val player1: PlayerModel,
     val player2: PlayerModel?,
     val playerTurn: PlayerModel,
-    val isGameReady: Boolean = false
+    val isGameReady: Boolean = false,
+    val isMyTurn: Boolean = false
 ) {
     fun toData(): GameData = GameData(
         board = board.map { it.id },

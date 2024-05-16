@@ -2,6 +2,7 @@ package dev.alejo.triqui.ui.game
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,15 +33,21 @@ fun GameScreen(
     }
 
     val game: GameModel? by gameViewModel.game.collectAsState()
-    Board(game)
+    Board(game) { position ->
+        gameViewModel.updateGame(position)
+    }
 }
 
 @Composable
-fun Board(game: GameModel?) {
+fun Board(game: GameModel?, onPressed: (Int) -> Unit) {
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = game?.gameId.orEmpty())
         val gameStatus = if (game?.isGameReady == true) {
-            "Your turn / opponent turn"
+            if (game.isMyTurn) {
+                "My turn"
+            } else {
+                "Opponent turn"
+            }
         } else {
             "Waiting for the opponent"
         }
@@ -48,31 +55,33 @@ fun Board(game: GameModel?) {
         Text(text = gameStatus)
 
         Row {
-            GameItem()
-            GameItem()
-            GameItem()
+            GameItem(game!!.board[0].symbol) { onPressed(0) }
+            GameItem(game!!.board[1].symbol) { onPressed(1) }
+            GameItem(game!!.board[2].symbol) { onPressed(2) }
         }
         Row {
-            GameItem()
-            GameItem()
-            GameItem()
+            GameItem(game!!.board[3].symbol) { onPressed(3) }
+            GameItem(game!!.board[4].symbol) { onPressed(4) }
+            GameItem(game!!.board[5].symbol) { onPressed(5) }
         }
         Row {
-            GameItem()
-            GameItem()
-            GameItem()
+            GameItem(game!!.board[6].symbol) { onPressed(6) }
+            GameItem(game!!.board[7].symbol) { onPressed(7) }
+            GameItem(game!!.board[8].symbol) { onPressed(8) }
         }
     }
 }
 
 @Composable
-fun GameItem() {
+fun GameItem(symbol: String, onPressed: () -> Unit) {
     Box(
         Modifier
             .size(64.dp)
             .padding(4.dp)
-            .border(BorderStroke(1.dp, Color.Black)), contentAlignment = Alignment.Center
+            .border(BorderStroke(1.dp, Color.Black))
+            .clickable { onPressed() },
+        contentAlignment = Alignment.Center
     ) {
-        Text("X")
+        Text(symbol)
     }
 }

@@ -24,18 +24,9 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
     fun joinToGame(gameId: String, playerId: String, isOwner: Boolean) {
         this.playerId = playerId
         if (isOwner) {
-            joinToGameAsOwner(gameId)
+            join(gameId)
         } else {
             joinToGameAsGuest(gameId)
-        }
-    }
-
-    private fun joinToGameAsOwner(gameId: String) {
-        viewModelScope.launch {
-            firebaseService.joinToGame(gameId).collect { game ->
-                val gameResult = game?.copy(isGameReady = game.player2 != null)
-                _game.value = gameResult
-            }
         }
     }
 
@@ -54,10 +45,22 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                 }
             }
 
+            join(gameId)
+        }
+    }
+
+    private fun join(gameId: String) {
+        viewModelScope.launch {
             firebaseService.joinToGame(gameId).collect { game ->
                 val gameResult = game?.copy(isGameReady = game.player2 != null)
                 _game.value = gameResult
             }
+        }
+    }
+
+    fun updateGame(position: Int) {
+        viewModelScope.launch {
+            
         }
     }
 

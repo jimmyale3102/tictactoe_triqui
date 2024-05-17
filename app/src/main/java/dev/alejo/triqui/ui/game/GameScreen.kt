@@ -34,8 +34,21 @@ fun GameScreen(
     }
 
     val game: GameModel? by gameViewModel.game.collectAsState()
-    Board(game) { position ->
-        gameViewModel.updateGame(position)
+    val winner: PlayerType? by gameViewModel.winner.collectAsState()
+
+    if (winner != null) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            val currentWinner = if (winner == PlayerType.PlayerOwner) {
+                "1"
+            } else {
+                "2"
+            }
+            Text(text = "Ha ganado el jugador $currentWinner")
+        }
+    } else {
+        Board(game) { position ->
+            gameViewModel.updateGame(position)
+        }
     }
 }
 

@@ -52,11 +52,13 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
     private fun join(gameId: String) {
         viewModelScope.launch {
             firebaseService.joinToGame(gameId).collect { game ->
-                val gameResult = game?.copy(isGameReady = game.player2 != null)
+                val gameResult = game?.copy(isGameReady = game.player2 != null, isMyTurn = isMyTurn())
                 _game.value = gameResult
             }
         }
     }
+
+    private fun isMyTurn() = game.value?.playerTurn?.id == playerId
 
     fun updateGame(position: Int) {
         viewModelScope.launch {

@@ -51,29 +51,28 @@ fun Board(game: GameModel?, onPressed: (Int) -> Unit) {
         } else {
             "Waiting for the opponent"
         }
-        //Text(text = "Your turn / Opponent turn / Waiting for opponent")
         Text(text = gameStatus)
 
         Row {
-            GameItem(game!!.board[0].symbol) { onPressed(0) }
-            GameItem(game!!.board[1].symbol) { onPressed(1) }
-            GameItem(game!!.board[2].symbol) { onPressed(2) }
+            GameItem("") { onPressed(0) }
+            GameItem("") { onPressed(1) }
+            GameItem("") { onPressed(2) }
         }
         Row {
-            GameItem(game!!.board[3].symbol) { onPressed(3) }
-            GameItem(game!!.board[4].symbol) { onPressed(4) }
-            GameItem(game!!.board[5].symbol) { onPressed(5) }
+            GameItem("") { onPressed(3) }
+            GameItem("") { onPressed(4) }
+            GameItem("") { onPressed(5) }
         }
         Row {
-            GameItem(game!!.board[6].symbol) { onPressed(6) }
-            GameItem(game!!.board[7].symbol) { onPressed(7) }
-            GameItem(game!!.board[8].symbol) { onPressed(8) }
+            GameItem("") { onPressed(6) }
+            GameItem("") { onPressed(7) }
+            GameItem("") { onPressed(8) }
         }
     }
 }
 
 @Composable
-fun GameItem(symbol: String, onPressed: () -> Unit) {
+fun GameItem(symbol: String?, onPressed: () -> Unit) {
     Box(
         Modifier
             .size(64.dp)
@@ -82,6 +81,6 @@ fun GameItem(symbol: String, onPressed: () -> Unit) {
             .clickable { onPressed() },
         contentAlignment = Alignment.Center
     ) {
-        Text(symbol)
+        Text(symbol.orEmpty())
     }
 }

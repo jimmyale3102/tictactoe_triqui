@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.alejo.triqui.ui.model.GameModel
+import dev.alejo.triqui.ui.model.PlayerType
 
 @Composable
 fun GameScreen(
@@ -40,9 +41,10 @@ fun GameScreen(
 
 @Composable
 fun Board(game: GameModel?, onPressed: (Int) -> Unit) {
+    if (game == null) return
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = game?.gameId.orEmpty())
-        val gameStatus = if (game?.isGameReady == true) {
+        Text(text = game.gameId.orEmpty())
+        val gameStatus = if (game.isGameReady) {
             if (game.isMyTurn) {
                 "My turn"
             } else {
@@ -54,25 +56,25 @@ fun Board(game: GameModel?, onPressed: (Int) -> Unit) {
         Text(text = gameStatus)
 
         Row {
-            GameItem("") { onPressed(0) }
-            GameItem("") { onPressed(1) }
-            GameItem("") { onPressed(2) }
+            GameItem(game.board[0]) { onPressed(0) }
+            GameItem(game.board[1]) { onPressed(1) }
+            GameItem(game.board[2]) { onPressed(2) }
         }
         Row {
-            GameItem("") { onPressed(3) }
-            GameItem("") { onPressed(4) }
-            GameItem("") { onPressed(5) }
+            GameItem(game.board[3]) { onPressed(3) }
+            GameItem(game.board[4]) { onPressed(4) }
+            GameItem(game.board[5]) { onPressed(5) }
         }
         Row {
-            GameItem("") { onPressed(6) }
-            GameItem("") { onPressed(7) }
-            GameItem("") { onPressed(8) }
+            GameItem(game.board[6]) { onPressed(6) }
+            GameItem(game.board[7]) { onPressed(7) }
+            GameItem(game.board[8]) { onPressed(8) }
         }
     }
 }
 
 @Composable
-fun GameItem(symbol: String?, onPressed: () -> Unit) {
+fun GameItem(playerType: PlayerType, onPressed: () -> Unit) {
     Box(
         Modifier
             .size(64.dp)
@@ -81,6 +83,6 @@ fun GameItem(symbol: String?, onPressed: () -> Unit) {
             .clickable { onPressed() },
         contentAlignment = Alignment.Center
     ) {
-        Text(symbol.orEmpty())
+        Text(playerType.symbol)
     }
 }

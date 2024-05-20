@@ -1,6 +1,5 @@
 package dev.alejo.triqui.ui.game
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,7 +45,6 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                     )
                     firebaseService.updateGame(gameResult.toData())
                 }
-                Log.i("Jimmy", "Join As Guest")
             }
 
             join(gameId)

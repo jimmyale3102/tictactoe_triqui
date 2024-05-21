@@ -2,16 +2,11 @@ package dev.alejo.triqui.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Gold10 = Color(0xFF332b00)
+val Gold40 = Color(0xFFccad00)
+val Gold80 = Color(0xFFfff099)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val Blue40 = Color(0xFF1e85ae)
 
-val DarkBackground = Color(0xFF1A1A1A)
-val DarkPurple = Color(0xFF363062)
-val LightBlueGray = Color(0xFF818FB4)
-val CreamyWhite = Color(0xFFF5E8C7)
-val LightOrange = Color(0xFFECB176)
+val Black10 = Color(0xFF1a1a1a)
+val Black80 = Color(0xFFcccccc)

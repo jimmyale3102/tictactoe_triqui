@@ -1,7 +1,6 @@
 package dev.alejo.triqui.ui.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -35,9 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.alejo.triqui.R
-import dev.alejo.triqui.ui.theme.CreamyWhite
-import dev.alejo.triqui.ui.theme.DarkBackground
-import dev.alejo.triqui.ui.theme.LightOrange
+import dev.alejo.triqui.ui.home.components.TriquiButton
+import dev.alejo.triqui.ui.theme.Black80
 
 @Composable
 fun HomeScreen(
@@ -47,7 +43,6 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBackground)
             .padding(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -72,7 +67,7 @@ fun Header() {
             text = stringResource(id = R.string.app_name),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            color = CreamyWhite
+            color = Black80
         )
         Box(
             modifier = Modifier
@@ -80,7 +75,7 @@ fun Header() {
                 .clip(RoundedCornerShape(24.dp))
         ) {
             Image(
-                painter = painterResource(id = R.drawable.home_logo),
+                painter = painterResource(id = R.drawable.logo),
                 contentDescription = stringResource(
                     id = R.string.app_name
                 )
@@ -99,7 +94,7 @@ fun DividerSection(modifier: Modifier = Modifier) {
                 .padding(horizontal = 8.dp)
                 .weight(1f)
         )
-        Text(text = "OR")
+        Text(text = stringResource(R.string.or))
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -112,12 +107,11 @@ fun DividerSection(modifier: Modifier = Modifier) {
 
 @Composable
 fun CreateGame(onCreateGame: () -> Unit) {
-    Button(
-        onClick = { onCreateGame() },
-        colors = ButtonDefaults.buttonColors(containerColor = LightOrange)
-    ) {
-        Text(text = "Create game")
-    }
+    TriquiButton(
+        modifier = Modifier.padding(8.dp),
+        icon = R.drawable.ic_game,
+        text = R.string.create_game
+    ) { onCreateGame() }
 }
 
 @Composable
@@ -127,21 +121,19 @@ fun JoinGame(onJoinGame: (String) -> Unit) {
         modifier = Modifier.clip(RoundedCornerShape(24.dp)),
         value = gameId,
         onValueChange = { gameId = it },
-        placeholder = { Text(text = "Type a Game ID") },
+        placeholder = { Text(text = stringResource(R.string.type_a_game_id)) },
         colors = TextFieldDefaults.colors(
-            cursorColor = LightOrange,
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent
         ),
         maxLines = 1,
         singleLine = true
     )
-    Button(
+    TriquiButton(
         modifier = Modifier.padding(8.dp),
-        onClick = { onJoinGame(gameId) },
-        enabled = gameId.isNotEmpty(),
-        colors = ButtonDefaults.buttonColors(containerColor = LightOrange)
-    ) {
-        Text(text = "Join Game")
-    }
+        icon = R.drawable.ic_join,
+        text = R.string.join_game,
+        enabled = gameId.isNotEmpty()
+    ) { onJoinGame(gameId) }
+
 }

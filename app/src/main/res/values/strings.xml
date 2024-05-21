@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Triqui</string>
+    <string name="create_game">Create game</string>
+    <string name="join_game">Join game</string>
+    <string name="type_a_game_id">Type a Game ID</string>
+    <string name="or">OR</string>
 </resources>

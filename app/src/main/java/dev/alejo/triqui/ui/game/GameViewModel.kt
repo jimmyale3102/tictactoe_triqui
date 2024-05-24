@@ -97,14 +97,31 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
             if (boardData.size == 9) {
                 when {
                     isGameWon(board, PlayerType.Main) -> {
+                        val mainVictories = _game.value!!.victories!!.mainPlayer
+                        val victoriesUpdated = _game.value!!.victories!!.copy(
+                            mainPlayer = mainVictories + 1
+                        )
+                        _game.value = _game.value!!.copy(victories = victoriesUpdated)
                         _winner.value = PlayerType.Main
                     }
 
                     isGameWon(board, PlayerType.Second) -> {
+                        val secondVictories = _game.value!!.victories!!.secondPlayer
+                        val victoriesUpdated = _game.value!!.victories!!.copy(
+                            mainPlayer = secondVictories + 1
+                        )
+                        _game.value = _game.value!!.copy(victories = victoriesUpdated)
                         _winner.value = PlayerType.Second
                     }
 
-                    !boardIsNotComplete -> _winner.value = PlayerType.Empty
+                    !boardIsNotComplete -> {
+                        val drawVictories = _game.value!!.victories!!.draw
+                        val victoriesUpdated = _game.value!!.victories!!.copy(
+                            mainPlayer = drawVictories + 1
+                        )
+                        _game.value = _game.value!!.copy(victories = victoriesUpdated)
+                        _winner.value = PlayerType.Empty
+                    }
                 }
             }
         } ?: return

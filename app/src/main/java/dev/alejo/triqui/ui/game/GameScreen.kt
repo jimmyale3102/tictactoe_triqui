@@ -85,7 +85,9 @@ fun GameScreen(
 @Composable
 fun WaitingToPlayAgain(@StringRes msg: Int) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

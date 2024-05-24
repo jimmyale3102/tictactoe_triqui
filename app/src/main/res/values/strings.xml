@@ -4,4 +4,15 @@
     <string name="join_game">Join game</string>
     <string name="type_a_game_id">Type a Game ID</string>
     <string name="or">OR</string>
+    <string name="share_game_id">Share Game Id</string>
+    <string name="waiting_for_your_opponent">Waiting for your opponent</string>
+    <string name="opponent_turn">Opponent turn</string>
+    <string name="your_turn">Your turn</string>
+    <string name="share_your_game_id">Share your GameId</string>
+    <string name="you_won">¡You won!</string>
+    <string name="you_lost">You lost</string>
+    <string name="play_again">Play again</string>
+    <string name="go_home">Go home</string>
+    <string name="draw">Draw</string>
+    <string name="opponent_wants_to_play_again">Your opponent wants to play again</string>
 </resources>

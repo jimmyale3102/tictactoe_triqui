@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.alejo.triqui.R
 import dev.alejo.triqui.ui.home.components.TriquiButton
 import dev.alejo.triqui.ui.theme.Black80
+import dev.alejo.triqui.ui.theme.GeneralRoundCorner
 
 @Composable
 fun HomeScreen(
@@ -118,7 +119,7 @@ fun CreateGame(onCreateGame: () -> Unit) {
 fun JoinGame(onJoinGame: (String) -> Unit) {
     var gameId by remember { mutableStateOf("") }
     TextField(
-        modifier = Modifier.clip(RoundedCornerShape(24.dp)),
+        modifier = Modifier.clip(RoundedCornerShape(GeneralRoundCorner)),
         value = gameId,
         onValueChange = { gameId = it },
         placeholder = { Text(text = stringResource(R.string.type_a_game_id)) },

@@ -10,7 +10,9 @@ data class GameData(
     val gameId: String? = null,
     val player1: PlayerData? = null,
     val player2: PlayerData? = null,
-    val playerTurn: PlayerData? = null
+    val playerTurn: PlayerData? = null,
+    val player1PlayAgain: Boolean = false,
+    val player2PlayAgain: Boolean = false
 )
 
 fun GameData.toModel(): GameModel = GameModel(
@@ -18,7 +20,9 @@ fun GameData.toModel(): GameModel = GameModel(
     gameId = gameId.orEmpty(),
     player1 = player1!!.toModel(),
     player2 = player2?.toModel(),
-    playerTurn = playerTurn!!.toModel()
+    playerTurn = playerTurn!!.toModel(),
+    player1PlayAgain = player1PlayAgain,
+    player2PlayAgain = player2PlayAgain
 )
 
 data class PlayerData(

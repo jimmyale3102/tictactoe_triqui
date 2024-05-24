@@ -38,7 +38,7 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
             firebaseService.joinToGame(gameId).take(1).collect { game ->
                 game?.let {
                     val gameResult = it.copy(
-                        player2 = PlayerModel(
+                        secondPlayer = PlayerModel(
                             id = playerId,
                             playerType = PlayerType.Second
                         )
@@ -55,12 +55,12 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
         viewModelScope.launch {
             firebaseService.joinToGame(gameId).collect { game ->
                 val gameResult = game?.copy(
-                    isGameReady = game.player2 != null,
+                    isGameReady = game.secondPlayer != null,
                     isMyTurn = isMyTurn(game.playerTurn)
                 )
                 _game.value = gameResult
                 gameResult?.let {
-                    if (it.player1PlayAgain && it.player2PlayAgain) {
+                    if (it.mainPlayerPlayAgain && it.secondPlayerPlayAgain) {
                         onRestartGame()
                     }
                     verifyWinner()
@@ -132,24 +132,24 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
     }
 
     fun getPlayer(): PlayerType? = when {
-        (game.value?.player1?.id == playerId) -> PlayerType.Main
-        (game.value?.player2?.id == playerId) -> PlayerType.Second
+        (game.value?.mainPlayer?.id == playerId) -> PlayerType.Main
+        (game.value?.secondPlayer?.id == playerId) -> PlayerType.Second
         else -> null
     }
 
     private fun getOpponentPlayer(): PlayerModel? {
-        return if (game.value?.player1?.id == playerId) game.value?.player2 else game.value?.player1
+        return if (game.value?.mainPlayer?.id == playerId) game.value?.secondPlayer else game.value?.mainPlayer
     }
 
     fun onPlayAgain() {
         viewModelScope.launch {
             val gameUpdated = if (getPlayer() == PlayerType.Main) {
                 game.value!!.copy(
-                    player1PlayAgain = true,
+                    mainPlayerPlayAgain = true,
                 )
             } else {
                 game.value!!.copy(
-                    player2PlayAgain = true,
+                    secondPlayerPlayAgain = true,
                 )
             }
             firebaseService.updateGame(gameUpdated.toData())
@@ -161,8 +161,8 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
         val boardUpdated = _game.value!!.board.toMutableList().map { PlayerType.Empty }
         _game.value = _game.value!!.copy(
             board = boardUpdated,
-            player1PlayAgain = false,
-            player2PlayAgain = false
+            mainPlayerPlayAgain = false,
+            secondPlayerPlayAgain = false
         )
     }
 

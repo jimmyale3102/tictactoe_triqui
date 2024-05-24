@@ -8,27 +8,30 @@ import java.util.Calendar
 data class GameData(
     val board: List<Int>? = null,
     val gameId: String? = null,
-    val player1: PlayerData? = null,
-    val player2: PlayerData? = null,
+    val mainPlayer: PlayerData? = null,
+    val secondPlayer: PlayerData? = null,
     val playerTurn: PlayerData? = null,
-    val player1PlayAgain: Boolean = false,
-    val player2PlayAgain: Boolean = false
+    val victories: GameVictories? = null,
+    val mainPlayerPlayAgain: Boolean = false,
+    val secondPlayerPlayAgain: Boolean = false
 )
 
 fun GameData.toModel(): GameModel = GameModel(
     board = board?.map { playerId -> PlayerType.getPlayerTypeById(playerId) } ?: mutableListOf(),
     gameId = gameId.orEmpty(),
-    player1 = player1!!.toModel(),
-    player2 = player2?.toModel(),
+    mainPlayer = mainPlayer!!.toModel(),
+    secondPlayer = secondPlayer?.toModel(),
     playerTurn = playerTurn!!.toModel(),
-    player1PlayAgain = player1PlayAgain,
-    player2PlayAgain = player2PlayAgain
+    victories = victories,
+    mainPlayerPlayAgain = mainPlayerPlayAgain,
+    secondPlayerPlayAgain = secondPlayerPlayAgain
 )
 
 data class PlayerData(
     val userId: String? = Calendar.getInstance().timeInMillis.hashCode().toString(),
     val playerType: Int? = null
 )
+data class GameVictories(val mainPlayer: Int = 0, val secondPlayer: Int = 0, val draw: Int = 0)
 
 fun PlayerData.toModel(): PlayerModel = PlayerModel(
     id = userId!!,

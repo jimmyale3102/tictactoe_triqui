@@ -137,13 +137,13 @@ fun WinnerResult(
         )
 
         when {
-            (game.player1PlayAgain && (playerType == PlayerType.Main))
-                || (game.player2PlayAgain && (playerType == PlayerType.Second)) -> {
+            (game.mainPlayerPlayAgain && (playerType == PlayerType.Main))
+                || (game.secondPlayerPlayAgain && (playerType == PlayerType.Second)) -> {
                 WaitingToPlayAgain(R.string.waiting_for_your_opponent)
             }
 
-            (game.player1PlayAgain && (playerType == PlayerType.Second))
-                || (game.player2PlayAgain && (playerType == PlayerType.Main)) -> {
+            (game.mainPlayerPlayAgain && (playerType == PlayerType.Second))
+                || (game.secondPlayerPlayAgain && (playerType == PlayerType.Main)) -> {
                 WaitingToPlayAgain(R.string.opponent_wants_to_play_again)
             }
         }

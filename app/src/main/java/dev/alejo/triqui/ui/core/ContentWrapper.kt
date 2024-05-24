@@ -32,7 +32,9 @@ fun ContentWrapper(navigationController: NavHostController) {
                 gameId = it.arguments?.getString("gameId").orEmpty(),
                 playerId = it.arguments?.getString("playerId").orEmpty(),
                 isOwner = it.arguments?.getBoolean("isOwner") ?: false
-            )
+            ) {
+                navigationController.popBackStack()
+            }
         }
     }
 }

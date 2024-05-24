@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
     private fun createPlayerId(): String = Calendar.getInstance().timeInMillis.hashCode().toString()
 
     private fun createNewGame(): GameData {
-        val currentPlayer = PlayerData(playerType = PlayerType.PlayerOwner.id)
+        val currentPlayer = PlayerData(playerType = PlayerType.Main.id)
         return GameData(
             board = List(9) { 0 },
             player1 = currentPlayer,

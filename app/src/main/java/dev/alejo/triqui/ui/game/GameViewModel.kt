@@ -1,6 +1,5 @@
 package dev.alejo.triqui.ui.game
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,12 +40,11 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                     val gameResult = it.copy(
                         player2 = PlayerModel(
                             id = playerId,
-                            playerType = PlayerType.PlayerGuest
+                            playerType = PlayerType.Second
                         )
                     )
                     firebaseService.updateGame(gameResult.toData())
                 }
-                Log.i("Jimmy", "Join As Guest")
             }
 
             join(gameId)
@@ -61,7 +59,12 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                     isMyTurn = isMyTurn(game.playerTurn)
                 )
                 _game.value = gameResult
-                verifyWinner()
+                gameResult?.let {
+                    if (it.player1PlayAgain && it.player2PlayAgain) {
+                        onRestartGame()
+                    }
+                    verifyWinner()
+                }
             }
         }
     }
@@ -89,17 +92,23 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
 
     private fun verifyWinner() {
         val board: List<PlayerType>? = game.value?.board
-        if (board != null && board.size == 9) {
-            when {
-                isGameWon(board, PlayerType.PlayerOwner) -> {
-                    _winner.value = PlayerType.PlayerOwner
-                }
+        board?.let { boardData ->
+            val boardIsNotComplete = boardData.any { it.id == PlayerType.Empty.id }
+            if (boardData.size == 9) {
+                when {
+                    isGameWon(board, PlayerType.Main) -> {
+                        _winner.value = PlayerType.Main
+                    }
 
-                isGameWon(board, PlayerType.PlayerGuest) -> {
-                    _winner.value = PlayerType.PlayerGuest
+                    isGameWon(board, PlayerType.Second) -> {
+                        _winner.value = PlayerType.Second
+                    }
+
+                    !boardIsNotComplete -> _winner.value = PlayerType.Empty
                 }
             }
-        }
+        } ?: return
+
     }
 
     private fun isGameWon(board: List<PlayerType>, playerType: PlayerType): Boolean {
@@ -122,14 +131,39 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
         }
     }
 
-    private fun getPlayer(): PlayerType? = when {
-        (game.value?.player1?.id == playerId) -> PlayerType.PlayerOwner
-        (game.value?.player2?.id == playerId) -> PlayerType.PlayerGuest
+    fun getPlayer(): PlayerType? = when {
+        (game.value?.player1?.id == playerId) -> PlayerType.Main
+        (game.value?.player2?.id == playerId) -> PlayerType.Second
         else -> null
     }
 
     private fun getOpponentPlayer(): PlayerModel? {
         return if (game.value?.player1?.id == playerId) game.value?.player2 else game.value?.player1
+    }
+
+    fun onPlayAgain() {
+        viewModelScope.launch {
+            val gameUpdated = if (getPlayer() == PlayerType.Main) {
+                game.value!!.copy(
+                    player1PlayAgain = true,
+                )
+            } else {
+                game.value!!.copy(
+                    player2PlayAgain = true,
+                )
+            }
+            firebaseService.updateGame(gameUpdated.toData())
+        }
+    }
+
+    private fun onRestartGame() {
+        _winner.value = null
+        val boardUpdated = _game.value!!.board.toMutableList().map { PlayerType.Empty }
+        _game.value = _game.value!!.copy(
+            board = boardUpdated,
+            player1PlayAgain = false,
+            player2PlayAgain = false
+        )
     }
 
 }

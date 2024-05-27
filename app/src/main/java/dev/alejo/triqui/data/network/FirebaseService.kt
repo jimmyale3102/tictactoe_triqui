@@ -1,5 +1,6 @@
 package dev.alejo.triqui.data.network
 
+import android.util.Log
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.snapshots
 import dev.alejo.triqui.data.network.model.GameData
@@ -29,6 +30,7 @@ class FirebaseService @Inject constructor(private val databaseRef: DatabaseRefer
     }
 
     fun updateGame(gameData: GameData) {
+        Log.d("=======UPDATE->", gameData.toString())
         if (gameData.gameId != null) {
             databaseRef.child(PATH).child(gameData.gameId).setValue(gameData)
         }

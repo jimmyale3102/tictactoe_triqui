@@ -12,7 +12,7 @@ data class GameModel(
     val playerTurn: PlayerModel,
     val isGameReady: Boolean = false,
     val isMyTurn: Boolean = false,
-    val victories: GameVictories?,
+    val victories: GameVictories,
     val mainPlayerPlayAgain: Boolean = false,
     val secondPlayerPlayAgain: Boolean = false
 ) {

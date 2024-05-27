@@ -20,24 +20,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alejo.triqui.R
+import dev.alejo.triqui.data.network.model.GameVictories
+import dev.alejo.triqui.ui.model.PlayerType
 import dev.alejo.triqui.ui.theme.Black80
-import dev.alejo.triqui.ui.theme.GeneralRoundCorner
 import dev.alejo.triqui.ui.theme.Gold40
 import dev.alejo.triqui.ui.theme.Gold80
+import dev.alejo.triqui.ui.theme.SmallRoundCorner
 import dev.alejo.triqui.ui.theme.TransparentBlack80
 import dev.alejo.triqui.ui.theme.TransparentGold10
 
 @Composable
-fun GameVictories(victories: Int, draw: Int, lost: Int) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+fun GameVictories(gameVictories: GameVictories, playerType: PlayerType) {
+    if (playerType == PlayerType.Main) {
+        GameVictoriesBoard(
+            victories = gameVictories.mainPlayer,
+            draw = gameVictories.draw,
+            lost = gameVictories.secondPlayer
+        )
+    } else {
+        GameVictoriesBoard(
+            victories = gameVictories.secondPlayer,
+            draw = gameVictories.draw,
+            lost = gameVictories.mainPlayer
+        )
+    }
+}
+
+@Composable
+fun GameVictoriesBoard(victories: Int, draw: Int, lost: Int) {
+    Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            text = stringResource(id = R.string.victories),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+            text = stringResource(id = R.string.results),
+            fontSize = 18.sp,
             color = Black80
         )
         Row(
@@ -45,11 +62,11 @@ fun GameVictories(victories: Int, draw: Int, lost: Int) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            VictoryItem(victories = victories.toString(), R.string.you)
+            VictoryItem(victories = victories.toString(), R.string.won)
             VerticalDivider()
             VictoryItem(victories = draw.toString(), R.string.draw)
             VerticalDivider()
-            VictoryItem(victories = lost.toString(), R.string.opponent)
+            VictoryItem(victories = lost.toString(), R.string.lost)
         }
     }
 }
@@ -59,17 +76,16 @@ fun VictoryItem(victories: String, @StringRes msg: Int) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(
             Modifier
-                .size(92.dp)
+                .size(72.dp)
                 .padding(8.dp)
-                .clip(RoundedCornerShape(GeneralRoundCorner))
+                .clip(RoundedCornerShape(SmallRoundCorner))
                 .background(TransparentGold10),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = victories, fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Gold80)
+            Text(text = victories, fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Gold80)
         }
         Text(
             text = stringResource(id = msg),
-            fontWeight = FontWeight.Bold,
             color = Gold40
         )
     }
@@ -79,17 +95,7 @@ fun VictoryItem(victories: String, @StringRes msg: Int) {
 private fun VerticalDivider() {
     Divider(
         modifier = Modifier
-            .height(92.dp)
+            .height(72.dp)
             .width(1.dp), thickness = 1.dp, color = TransparentBlack80
-    )
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun GameVictoriesPreview() {
-    GameVictories(
-        victories = 3,
-        draw = 6,
-        lost = 2
     )
 }

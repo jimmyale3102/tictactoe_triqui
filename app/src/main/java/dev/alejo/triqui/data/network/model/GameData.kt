@@ -22,7 +22,7 @@ fun GameData.toModel(): GameModel = GameModel(
     mainPlayer = mainPlayer!!.toModel(),
     secondPlayer = secondPlayer?.toModel(),
     playerTurn = playerTurn!!.toModel(),
-    victories = victories,
+    victories = victories ?: GameVictories(),
     mainPlayerPlayAgain = mainPlayerPlayAgain,
     secondPlayerPlayAgain = secondPlayerPlayAgain
 )

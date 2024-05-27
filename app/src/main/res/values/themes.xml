@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Triqui" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/black_10</item>
+    <style name="Theme.Triqui" parent="android:Theme.Material.Light.NoActionBar"/>
+
+    <!-- Theme for the launch screen -->
+    <style name="LaunchTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/black_10</item>
     </style>
 </resources>

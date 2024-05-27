@@ -13,6 +13,9 @@
     <string name="you_lost">You lost</string>
     <string name="play_again">Play again</string>
     <string name="go_home">Go home</string>
-    <string name="draw">Draw</string>
     <string name="opponent_wants_to_play_again">Your opponent wants to play again</string>
+    <string name="draw">Draw</string>
+    <string name="won">Won</string>
+    <string name="lost">Lost</string>
+    <string name="results">Results</string>
 </resources>

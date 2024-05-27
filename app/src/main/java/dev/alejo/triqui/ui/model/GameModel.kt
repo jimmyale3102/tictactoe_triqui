@@ -1,27 +1,30 @@
 package dev.alejo.triqui.ui.model
 
 import dev.alejo.triqui.data.network.model.GameData
+import dev.alejo.triqui.data.network.model.GameVictories
 import dev.alejo.triqui.data.network.model.PlayerData
 
 data class GameModel(
     val gameId: String,
     val board: List<PlayerType>,
-    val player1: PlayerModel,
-    val player2: PlayerModel?,
+    val mainPlayer: PlayerModel,
+    val secondPlayer: PlayerModel?,
     val playerTurn: PlayerModel,
     val isGameReady: Boolean = false,
     val isMyTurn: Boolean = false,
-    val player1PlayAgain: Boolean = false,
-    val player2PlayAgain: Boolean = false
+    val victories: GameVictories,
+    val mainPlayerPlayAgain: Boolean = false,
+    val secondPlayerPlayAgain: Boolean = false
 ) {
     fun toData(): GameData = GameData(
         board = board.map { it.id },
         gameId = gameId,
-        player1 = player1.toData(),
-        player2 = player2?.toData(),
+        mainPlayer = mainPlayer.toData(),
+        secondPlayer = secondPlayer?.toData(),
         playerTurn = playerTurn.toData(),
-        player1PlayAgain = player1PlayAgain,
-        player2PlayAgain = player2PlayAgain
+        victories = victories,
+        mainPlayerPlayAgain = mainPlayerPlayAgain,
+        secondPlayerPlayAgain = secondPlayerPlayAgain
     )
 }
 

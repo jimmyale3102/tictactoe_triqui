@@ -1,0 +1,32 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main", "dev", "feat/ui", "feat/data", "imprv/ui" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: set up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Create google services file
+      run: cat /home/runner/work/tictactoe_triqui/tictactoe_triqui/app/google-services.json | base64
+    - name: Set google services data
+      env:
+        DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      run: echo $DATA > /home/runner/work/tictactoe_triqui/tictactoe_triqui/app/google-services.json
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build

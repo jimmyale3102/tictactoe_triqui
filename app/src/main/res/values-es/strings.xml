@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Triqui</string>
+    <string name="create_game">Crear juego</string>
+    <string name="join_game">Unirse al juego</string>
+    <string name="type_a_game_id">Introduce el Id del juego</string>
+    <string name="or">O</string>
+    <string name="share_game_id">Compartir Id del juego</string>
+    <string name="waiting_for_your_opponent">Esperando a tu oponente</string>
+    <string name="opponent_turn">Turno del oponente</string>
+    <string name="your_turn">Tu turno</string>
+    <string name="you_won">¡Ganaste!</string>
+    <string name="you_lost">Perdiste</string>
+    <string name="play_again">Jugar de nuevo</string>
+    <string name="go_home">Volver</string>
+    <string name="opponent_wants_to_play_again">Tu oponente quiere jugar de nuevo</string>
+    <string name="draw">Empate</string>
+    <string name="won">Ganados</string>
+    <string name="lost">Perdidos</string>
+    <string name="results">Resultados</string>
+</resources>

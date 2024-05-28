@@ -2,7 +2,6 @@ package dev.alejo.triqui.ui.game
 
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,11 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.alejo.triqui.R
+import dev.alejo.triqui.ui.game.components.GameResult
+import dev.alejo.triqui.ui.game.components.GameVictories
 import dev.alejo.triqui.ui.home.components.TriquiButton
-import dev.alejo.triqui.ui.home.components.TriquiOutlinedButton
 import dev.alejo.triqui.ui.model.GameModel
 import dev.alejo.triqui.ui.model.PlayerType
-import dev.alejo.triqui.ui.theme.Black80
 import dev.alejo.triqui.ui.theme.Blue40
 import dev.alejo.triqui.ui.theme.GeneralRoundCorner
 import dev.alejo.triqui.ui.theme.Gold80
@@ -59,13 +57,19 @@ fun GameScreen(
 
     val game: GameModel? by gameViewModel.game.collectAsState()
     val winner: PlayerType? by gameViewModel.winner.collectAsState()
+    val playerType = game?.let {
+        if (it.isGameReady) {
+            gameViewModel.getPlayer()
+        } else {
+            PlayerType.Main
+        }
+    } ?: PlayerType.Main
 
     if (winner != null) {
-        val playerType = gameViewModel.getPlayer()
-        WinnerResult(
+        GameResult(
             game = game!!,
             winner = winner!!,
-            playerType = playerType!!,
+            playerType = playerType,
             onGoHome = { onGoHome() },
             onPlayAgain = { gameViewModel.onPlayAgain() }
         )
@@ -73,25 +77,13 @@ fun GameScreen(
         val context = LocalContext.current
         Game(
             game = game,
+            playerType = playerType,
             shareGameId = {
                 shareGameId(context, game?.gameId)
             }
         ) { position ->
             gameViewModel.updateGame(position)
         }
-    }
-}
-
-@Composable
-fun WaitingToPlayAgain(@StringRes msg: Int) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CircularProgressIndicator(modifier = Modifier.size(24.dp))
-        Spacer(Modifier.width(8.dp))
-        Text(text = stringResource(msg))
     }
 }
 
@@ -107,69 +99,24 @@ private fun shareGameId(context: Context, gameId: String?) {
 }
 
 @Composable
-fun WinnerResult(
-    game: GameModel,
-    winner: PlayerType,
+fun Game(
+    game: GameModel?,
     playerType: PlayerType,
-    onGoHome: () -> Unit,
-    onPlayAgain: () -> Unit
+    shareGameId: () -> Unit,
+    onPressed: (Int) -> Unit
 ) {
-    Column(
-        Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        val gameResult = if (winner == PlayerType.Empty) {
-            stringResource(R.string.draw)
-        } else {
-            if (winner == playerType) {
-                stringResource(R.string.you_won)
-            } else {
-                stringResource(R.string.you_lost)
-            }
-        }
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = gameResult,
-            fontSize = 28.sp,
-            color = Black80,
-            fontWeight = FontWeight.Bold
-        )
-
-        when {
-            (game.player1PlayAgain && (playerType == PlayerType.Main))
-                || (game.player2PlayAgain && (playerType == PlayerType.Second)) -> {
-                WaitingToPlayAgain(R.string.waiting_for_your_opponent)
-            }
-
-            (game.player1PlayAgain && (playerType == PlayerType.Second))
-                || (game.player2PlayAgain && (playerType == PlayerType.Main)) -> {
-                WaitingToPlayAgain(R.string.opponent_wants_to_play_again)
-            }
-        }
-
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            TriquiOutlinedButton(icon = R.drawable.ic_home, text = R.string.go_home) {
-                onGoHome()
-            }
-            Spacer(Modifier.width(16.dp))
-            TriquiButton(icon = R.drawable.ic_restart, text = R.string.play_again) {
-                onPlayAgain()
-            }
-        }
-    }
-}
-
-@Composable
-fun Game(game: GameModel?, shareGameId: () -> Unit, onPressed: (Int) -> Unit) {
     if (game == null) return
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.weight(0.5f))
         GameStatus(game)
         Spacer(modifier = Modifier.weight(1f))
+        GameVictories(gameVictories = game.victories, playerType = playerType)
+        Spacer(modifier = Modifier.weight(1f))
         Board(game) { position -> onPressed(position) }
         Spacer(modifier = Modifier.weight(1f))
-        ShareGame { shareGameId() }
+        if (playerType == PlayerType.Main) {
+            ShareGame { shareGameId() }
+        }
         Spacer(modifier = Modifier.weight(0.5f))
     }
 }

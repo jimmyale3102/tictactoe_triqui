@@ -17,7 +17,7 @@ class HomeViewModel @Inject constructor(
     fun onCreateGame(navigateToGame: (String, String, Boolean) -> Unit) {
         val game = createNewGame()
         val gameId = firebaseService.createGame(game)
-        val userId = game.player1?.userId.orEmpty()
+        val userId = game.mainPlayer?.userId.orEmpty()
         val isOwner = true
         navigateToGame(gameId, userId, isOwner)
     }
@@ -33,9 +33,9 @@ class HomeViewModel @Inject constructor(
         val currentPlayer = PlayerData(playerType = PlayerType.Main.id)
         return GameData(
             board = List(9) { 0 },
-            player1 = currentPlayer,
+            mainPlayer = currentPlayer,
             playerTurn = currentPlayer,
-            player2 = null
+            secondPlayer = null
         )
     }
 

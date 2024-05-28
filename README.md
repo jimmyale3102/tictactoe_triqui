@@ -6,10 +6,12 @@ Welcome to this Tic-Tac-Toe game | Triqui repository! This simple yet entertaini
 
 ## Previews
 
-<img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/dev/assets/0.png" height="300"/>
-<img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/dev/assets/1.png" height="300"/>
-<img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/dev/assets/2.png" height="300"/>
-<img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/dev/assets/3.png" height="300"/>
+<p>
+    <img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/main/assets/0.png" height="300"/>
+    <img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/main/assets/1.png" height="300"/>
+    <img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/main/assets/2.png" height="300"/>
+    <img src="https://github.com/jimmyale3102/tictactoe_triqui/blob/main/assets/3.png" height="300"/>
+</p>
 
 
 ## How to Play

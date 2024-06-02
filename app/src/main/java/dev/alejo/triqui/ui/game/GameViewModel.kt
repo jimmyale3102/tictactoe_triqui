@@ -55,7 +55,7 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
         viewModelScope.launch {
             firebaseService.joinToGame(gameId).collect { game ->
                 val gameResult = game?.copy(
-                    isGameReady = game.secondPlayer != null,
+                    isGameReady = isGameReady(game),
                     isMyTurn = isMyTurn(game.playerTurn)
                 )
                 _game.value = gameResult
@@ -69,6 +69,8 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
         }
     }
 
+    private fun isGameReady(game: GameModel) = game.secondPlayer != null || game.singlePlayer
+
     private fun isMyTurn(playerTurn: PlayerModel) = playerTurn.id == playerId
 
     fun updateGame(position: Int) {
@@ -81,10 +83,14 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                 boardUpdated[position] = getPlayer() ?: PlayerType.Empty
 
                 firebaseService.updateGame(
-                    currentGame.copy(
-                        board = boardUpdated,
-                        playerTurn = getOpponentPlayer()!!
-                    ).toData()
+                    if (currentGame.singlePlayer) {
+                        currentGame.copy(board = boardUpdated).toData()
+                    } else {
+                        currentGame.copy(
+                            board = boardUpdated,
+                            playerTurn = getOpponentPlayer()!!
+                        ).toData()
+                    }
                 )
             }
         }

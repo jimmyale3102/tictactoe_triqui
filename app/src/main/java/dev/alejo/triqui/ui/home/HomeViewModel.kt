@@ -43,7 +43,7 @@ class HomeViewModel @Inject constructor(
             mainPlayer = currentPlayer,
             playerTurn = currentPlayer,
             secondPlayer = null,
-            isSinglePlayer = isSinglePlayer
+            singlePlayer = isSinglePlayer
         )
     }
 

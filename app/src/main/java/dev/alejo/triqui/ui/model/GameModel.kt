@@ -15,7 +15,7 @@ data class GameModel(
     val victories: GameVictories,
     val mainPlayerPlayAgain: Boolean = false,
     val secondPlayerPlayAgain: Boolean = false,
-    val isSinglePlayer: Boolean = false
+    val singlePlayer: Boolean = false
 ) {
     fun toData(): GameData = GameData(
         board = board.map { it.id },
@@ -26,7 +26,7 @@ data class GameModel(
         victories = victories,
         mainPlayerPlayAgain = mainPlayerPlayAgain,
         secondPlayerPlayAgain = secondPlayerPlayAgain,
-        isSinglePlayer = isSinglePlayer
+        singlePlayer = singlePlayer
     )
 }
 

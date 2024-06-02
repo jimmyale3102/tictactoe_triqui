@@ -49,6 +49,7 @@ fun GameScreen(
     gameId: String,
     playerId: String,
     isOwner: Boolean,
+    isSinglePlayer: Boolean,
     onGoHome: () -> Unit
 ) {
     LaunchedEffect(true) {

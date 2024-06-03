@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,19 +19,43 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
     ViewModel() {
 
     private lateinit var playerId: String
+    private val singlePlayerMode by lazy { SinglePlayerMode() }
     private val _game = MutableStateFlow<GameModel?>(null)
     val game: StateFlow<GameModel?> = _game
     private val _winner = MutableStateFlow<PlayerType?>(null)
     val winner: StateFlow<PlayerType?> = _winner
 
-    fun joinToGame(gameId: String, playerId: String, isOwner: Boolean) {
+    fun joinToGame(gameId: String, playerId: String, isOwner: Boolean, isSinglePlayer: Boolean) {
         this.playerId = playerId
         if (isOwner) {
-            join(gameId)
+            if (isSinglePlayer) {
+                joinAsSinglePlayer(gameId)
+            } else {
+                join(gameId)
+            }
         } else {
             joinToGameAsGuest(gameId)
         }
     }
+
+    private fun joinAsSinglePlayer(gameId: String) {
+        viewModelScope.launch {
+            firebaseService.joinToGame(gameId).take(1).collect { game ->
+                game?.let {
+                    val gameResult = it.copy(
+                        secondPlayer = PlayerModel(
+                            id = createPlayerId(),
+                            playerType = PlayerType.Second
+                        )
+                    )
+                    firebaseService.updateGame(gameResult.toData())
+                }
+            }
+            join(gameId)
+        }
+    }
+
+    private fun createPlayerId(): String = Calendar.getInstance().timeInMillis.hashCode().toString()
 
     private fun joinToGameAsGuest(gameId: String) {
         viewModelScope.launch {
@@ -60,6 +85,9 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                 )
                 _game.value = gameResult
                 gameResult?.let {
+                    if (!it.isMyTurn && it.singlePlayer) {
+                        machineMove()
+                    }
                     when {
                         (it.mainPlayerPlayAgain && it.secondPlayerPlayAgain) -> resetGameData()
                         (!it.mainPlayerPlayAgain && !it.secondPlayerPlayAgain) -> verifyWinner()
@@ -75,25 +103,32 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
 
     fun updateGame(position: Int) {
         val currentGame = _game.value ?: return
-        if (currentGame.isGameReady
-            && currentGame.board[position] == PlayerType.Empty && isMyTurn(currentGame.playerTurn)
-        ) {
-            viewModelScope.launch {
-                val boardUpdated = currentGame.board.toMutableList()
-                boardUpdated[position] = getPlayer() ?: PlayerType.Empty
-
-                firebaseService.updateGame(
-                    if (currentGame.singlePlayer) {
-                        currentGame.copy(board = boardUpdated).toData()
-                    } else {
-                        currentGame.copy(
-                            board = boardUpdated,
-                            playerTurn = getOpponentPlayer()!!
-                        ).toData()
-                    }
-                )
+        if (currentGame.isGameReady && currentGame.board[position] == PlayerType.Empty) {
+            if (isMyTurn(currentGame.playerTurn)) {
+                val playerType = getPlayer() ?: PlayerType.Empty
+                updateGame(currentGame, position, playerType)
+            } else if(!isMyTurn(currentGame.playerTurn) && currentGame.singlePlayer) {
+                updateGame(currentGame, position, PlayerType.Second)
             }
         }
+    }
+
+    private fun updateGame(currentGame: GameModel, position: Int, playerType: PlayerType) {
+        viewModelScope.launch {
+            val boardUpdated = currentGame.board.toMutableList()
+            boardUpdated[position] = playerType
+
+            firebaseService.updateGame(
+                currentGame.copy(
+                    board = boardUpdated,
+                    playerTurn = getOpponentPlayer()!!
+                ).toData()
+            )
+        }
+    }
+
+    private fun machineMove() {
+        singlePlayerMode.findBestMove(board = game.value?.board!!.toMutableList())
     }
 
     private fun verifyWinner() {

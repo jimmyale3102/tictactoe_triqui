@@ -53,7 +53,7 @@ fun GameScreen(
     onGoHome: () -> Unit
 ) {
     LaunchedEffect(true) {
-        gameViewModel.joinToGame(gameId, playerId, isOwner)
+        gameViewModel.joinToGame(gameId, playerId, isOwner, isSinglePlayer)
     }
 
     val game: GameModel? by gameViewModel.game.collectAsState()

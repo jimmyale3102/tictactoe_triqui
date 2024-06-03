@@ -101,8 +101,7 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
 
     private fun checkMachineTurn() {
         _game.value?.let {
-            val boardIncomplete = it.board.contains(PlayerType.Empty)
-            if (!it.isMyTurn && it.singlePlayer && boardIncomplete) {
+            if (!it.isMyTurn && it.singlePlayer && _winner.value == null) {
                 machineMove()
             }
         }
@@ -213,7 +212,7 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
     fun onPlayAgain() {
         viewModelScope.launch {
             val gameUpdated = when {
-                game.value!!.singlePlayer -> {
+                _game.value!!.singlePlayer -> {
                     _game.value!!.copy(
                         mainPlayerPlayAgain = true,
                         secondPlayerPlayAgain = true,

@@ -1,20 +1,31 @@
 package dev.alejo.triqui.ui.game
 
 import dev.alejo.triqui.ui.model.PlayerType
+import kotlin.random.Random
 
 class SinglePlayerMode {
 
     fun findBestMove(board: MutableList<PlayerType>): Int? {
+        /** Randomly choose between 0 and 1
+         *  0 -> returns a random move
+         *  1 -> returns the best move
+         */
+        val decision = Random.nextInt(2)
         var bestScore = Int.MIN_VALUE
         var bestMove: Int? = null
-        for (i in board.indices) {
-            if (board[i] == PlayerType.Empty) {
-                board[i] = PlayerType.Second
-                val score = minimax(board, false)
-                board[i] = PlayerType.Empty
-                if (score > bestScore) {
-                    bestScore = score
-                    bestMove = i
+        if (decision == 0 ) {
+            val emptyIndices = board.indices.filter { board[it] == PlayerType.Empty }
+            bestMove = emptyIndices.random()
+        } else {
+            for (i in board.indices) {
+                if (board[i] == PlayerType.Empty) {
+                    board[i] = PlayerType.Second
+                    val score = minimax(board, false)
+                    board[i] = PlayerType.Empty
+                    if (score > bestScore) {
+                        bestScore = score
+                        bestMove = i
+                    }
                 }
             }
         }

@@ -17,4 +17,7 @@
     <string name="won">Won</string>
     <string name="lost">Lost</string>
     <string name="results">Results</string>
+    <string name="single_player">Single player</string>
+    <string name="multi_player">Multiplayer</string>
+    <string name="back">Back</string>
 </resources>

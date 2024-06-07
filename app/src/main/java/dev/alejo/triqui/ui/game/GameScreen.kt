@@ -49,10 +49,11 @@ fun GameScreen(
     gameId: String,
     playerId: String,
     isOwner: Boolean,
+    isSinglePlayer: Boolean,
     onGoHome: () -> Unit
 ) {
     LaunchedEffect(true) {
-        gameViewModel.joinToGame(gameId, playerId, isOwner)
+        gameViewModel.joinToGame(gameId, playerId, isOwner, isSinglePlayer)
     }
 
     val game: GameModel? by gameViewModel.game.collectAsState()
@@ -114,7 +115,7 @@ fun Game(
         Spacer(modifier = Modifier.weight(1f))
         Board(game) { position -> onPressed(position) }
         Spacer(modifier = Modifier.weight(1f))
-        if (playerType == PlayerType.Main) {
+        if (playerType == PlayerType.Main && !game.singlePlayer) {
             ShareGame { shareGameId() }
         }
         Spacer(modifier = Modifier.weight(0.5f))
@@ -131,12 +132,14 @@ fun GameStatus(game: GameModel) {
         }
         Text(text = gameTurn)
     } else {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CircularProgressIndicator(modifier = Modifier.size(24.dp))
-            Text(text = stringResource(R.string.waiting_for_your_opponent))
+        if (!game.singlePlayer) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                Text(text = stringResource(R.string.waiting_for_your_opponent))
+            }
         }
     }
 }

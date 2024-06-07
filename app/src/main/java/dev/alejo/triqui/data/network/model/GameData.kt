@@ -6,6 +6,7 @@ import dev.alejo.triqui.ui.model.PlayerType
 import java.util.Calendar
 
 data class GameData(
+    val date: String = Calendar.getInstance().time.toString(),
     val board: List<Int>? = null,
     val gameId: String? = null,
     val mainPlayer: PlayerData? = null,
@@ -13,7 +14,8 @@ data class GameData(
     val playerTurn: PlayerData? = null,
     val victories: GameVictories? = null,
     val mainPlayerPlayAgain: Boolean = false,
-    val secondPlayerPlayAgain: Boolean = false
+    val secondPlayerPlayAgain: Boolean = false,
+    val singlePlayer: Boolean = false
 )
 
 fun GameData.toModel(): GameModel = GameModel(
@@ -24,7 +26,8 @@ fun GameData.toModel(): GameModel = GameModel(
     playerTurn = playerTurn!!.toModel(),
     victories = victories ?: GameVictories(),
     mainPlayerPlayAgain = mainPlayerPlayAgain,
-    secondPlayerPlayAgain = secondPlayerPlayAgain
+    secondPlayerPlayAgain = secondPlayerPlayAgain,
+    singlePlayer = singlePlayer
 )
 
 data class PlayerData(

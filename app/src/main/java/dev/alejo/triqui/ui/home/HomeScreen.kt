@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.alejo.triqui.R
 import dev.alejo.triqui.ui.home.components.TriquiButton
-import dev.alejo.triqui.ui.home.components.TriquiOutlinedButton
 import dev.alejo.triqui.ui.theme.Black80
 import dev.alejo.triqui.ui.theme.GeneralRoundCorner
 

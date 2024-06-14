@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.alejo.triqui.R
+import dev.alejo.triqui.ui.game.Board
 import dev.alejo.triqui.ui.home.components.TriquiButton
 import dev.alejo.triqui.ui.home.components.TriquiOutlinedButton
 import dev.alejo.triqui.ui.model.GameModel
@@ -43,6 +44,8 @@ fun GameResult(
         VictoryResult(winner, playerType)
         Spacer(modifier = Modifier.height(16.dp))
         GameVictories(gameVictories = game.victories, playerType = playerType)
+        Spacer(modifier = Modifier.height(16.dp))
+        Board(game) {  }
         Spacer(modifier = Modifier.height(16.dp))
         PlayAgainStatus(game, playerType)
         GameOptions(onGoHome, onPlayAgain)

@@ -18,4 +18,7 @@
     <string name="won">Ganados</string>
     <string name="lost">Perdidos</string>
     <string name="results">Resultados</string>
+    <string name="single_player">Un jugador</string>
+    <string name="multi_player">Multijugador</string>
+    <string name="back">Volver</string>
 </resources>

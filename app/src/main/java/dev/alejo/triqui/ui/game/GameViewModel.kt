@@ -7,12 +7,14 @@ import dev.alejo.triqui.data.network.FirebaseService
 import dev.alejo.triqui.ui.model.GameModel
 import dev.alejo.triqui.ui.model.PlayerModel
 import dev.alejo.triqui.ui.model.PlayerType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class GameViewModel @Inject constructor(private val firebaseService: FirebaseService) :
@@ -51,7 +53,7 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                     firebaseService.updateGame(gameResult.toData())
                 }
             }
-            join(gameId)
+            join(gameId = gameId, isSinglePlayer = true)
         }
     }
 
@@ -76,7 +78,7 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
         }
     }
 
-    private fun join(gameId: String) {
+    private fun join(gameId: String, isSinglePlayer: Boolean = false) {
         viewModelScope.launch {
             firebaseService.joinToGame(gameId).collect { game ->
                 val gameResult = game?.copy(
@@ -89,7 +91,9 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
                         (it.mainPlayerPlayAgain && it.secondPlayerPlayAgain) -> resetGameData()
                         (!it.mainPlayerPlayAgain && !it.secondPlayerPlayAgain) -> verifyWinner()
                     }
-                    checkMachineTurn()
+                    if (isSinglePlayer) {
+                        checkMachineTurn()
+                    }
                 }
             }
         }
@@ -112,14 +116,39 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
         if (currentGame.isGameReady && currentGame.board[position] == PlayerType.Empty
             && isMyTurn(currentGame.playerTurn)
         ) {
-            val playerType = getPlayer() ?: PlayerType.Empty
-            updateGame(currentGame, position, playerType, getOpponentPlayer()!!)
+            if (currentGame.singlePlayer) {
+                updateSingleGame(currentGame, position, PlayerType.Main, game.value!!.secondPlayer!!)
+            } else {
+                val playerType = getPlayer() ?: PlayerType.Empty
+                updateGame(currentGame, position, playerType, getOpponentPlayer()!!)
+            }
         }
     }
 
-    private fun machineMove() {
+    private fun machineMove()  {
         val bestMove = singlePlayerMode.findBestMove(board = game.value?.board!!.toMutableList())
-        updateGame(_game.value!!, bestMove!!, PlayerType.Second, game.value!!.mainPlayer)
+        viewModelScope.launch {
+            val randomSeconds = (1..3).random()
+            delay(randomSeconds.seconds)
+            updateSingleGame(_game.value!!, bestMove!!, PlayerType.Second, game.value!!.mainPlayer)
+        }
+    }
+
+    private fun updateSingleGame(
+        currentGame: GameModel,
+        position: Int,
+        playerType: PlayerType,
+        playerTurn: PlayerModel
+    ) {
+        val boardUpdated = currentGame.board.toMutableList()
+        boardUpdated[position] = playerType
+        _game.value = currentGame.copy(
+            board = boardUpdated,
+            playerTurn = playerTurn,
+            isMyTurn = isMyTurn(playerTurn)
+        )
+        verifyWinner()
+        checkMachineTurn()
     }
 
     private fun updateGame(
@@ -147,36 +176,40 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
             val boardIsNotComplete = boardData.any { it.id == PlayerType.Empty.id }
             if (boardData.size == 9) {
                 when {
-                    isGameWon(board, PlayerType.Main) -> {
-                        val mainVictories = _game.value!!.victories.mainPlayer
-                        val victoriesUpdated = _game.value!!.victories.copy(
-                            mainPlayer = mainVictories + 1
-                        )
-                        _game.value = _game.value!!.copy(victories = victoriesUpdated)
-                        _winner.value = PlayerType.Main
-                    }
-
-                    isGameWon(board, PlayerType.Second) -> {
-                        val secondVictories = _game.value!!.victories.secondPlayer
-                        val victoriesUpdated = _game.value!!.victories.copy(
-                            secondPlayer = secondVictories + 1
-                        )
-                        _game.value = _game.value!!.copy(victories = victoriesUpdated)
-                        _winner.value = PlayerType.Second
-                    }
-
-                    !boardIsNotComplete -> {
-                        val drawVictories = _game.value!!.victories.draw
-                        val victoriesUpdated = _game.value!!.victories.copy(
-                            draw = drawVictories + 1
-                        )
-                        _game.value = _game.value!!.copy(victories = victoriesUpdated)
-                        _winner.value = PlayerType.Empty
-                    }
+                    isGameWon(board, PlayerType.Main) -> addMainPlayerVictory()
+                    isGameWon(board, PlayerType.Second) -> addSecondPlayerVictory()
+                    !boardIsNotComplete -> addDrawVictory()
                 }
             }
         } ?: return
 
+    }
+
+    private fun addMainPlayerVictory() {
+        val mainVictories = _game.value!!.victories.mainPlayer
+        val victoriesUpdated = _game.value!!.victories.copy(
+            mainPlayer = mainVictories + 1
+        )
+        _game.value = _game.value!!.copy(victories = victoriesUpdated)
+        _winner.value = PlayerType.Main
+    }
+
+    private fun addSecondPlayerVictory() {
+        val secondVictories = _game.value!!.victories.secondPlayer
+        val victoriesUpdated = _game.value!!.victories.copy(
+            secondPlayer = secondVictories + 1
+        )
+        _game.value = _game.value!!.copy(victories = victoriesUpdated)
+        _winner.value = PlayerType.Second
+    }
+
+    private fun addDrawVictory() {
+        val drawVictories = _game.value!!.victories.draw
+        val victoriesUpdated = _game.value!!.victories.copy(
+            draw = drawVictories + 1
+        )
+        _game.value = _game.value!!.copy(victories = victoriesUpdated)
+        _winner.value = PlayerType.Empty
     }
 
     private fun isGameWon(board: List<PlayerType>, playerType: PlayerType): Boolean {
@@ -241,9 +274,6 @@ class GameViewModel @Inject constructor(private val firebaseService: FirebaseSer
             mainPlayerPlayAgain = false,
             secondPlayerPlayAgain = false
         )
-        if (_game.value!!.singlePlayer) {
-            checkMachineTurn()
-        }
     }
 
 }

@@ -65,7 +65,6 @@ fun GameScreen(
             PlayerType.Main
         }
     } ?: PlayerType.Main
-
     if (winner != null) {
         GameResult(
             game = game!!,
